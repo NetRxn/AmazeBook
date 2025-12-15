@@ -18,7 +18,7 @@ const Home = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <div className="inline-flex items-center px-4 py-2 rounded-full bg-magic-500/10 text-magic-600 font-medium text-sm mb-8 animate-fade-in-up">
             <Star size={16} className="mr-2 fill-current" />
-            Voted #1 Gift for Kids in 2024
+            Voted #1 Gift for Kids in 2026 by Awesome Parents
           </div>
           
           <h1 className="text-5xl md:text-7xl font-display font-bold text-slate-900 leading-tight mb-8">
