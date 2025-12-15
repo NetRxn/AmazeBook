@@ -17,14 +17,25 @@ export interface Character {
 
 export interface Project {
   id: string;
-  // Replaced single child fields with characters array
   characters: Character[];
   theme: string;
   customPrompt?: string;
+  
+  // Book Metadata
+  title?: string;
+  dedication?: string;
+  
+  // Assets
+  coverImagePrompt?: string;
+  coverImageUrl?: string;
+  
   status: 'DRAFT' | 'UPLOADING' | 'PLANNING_STORY' | 'GENERATING_STORY' | 'GENERATING_IMAGES' | 'COMPLETED' | 'FAILED';
   storyPages: StoryPage[];
   consentGiven: boolean;
   style: 'watercolor' | 'cartoon' | 'storybook_classic' | '3d_render';
+  
+  // Commerce
+  isPurchased: boolean;
 }
 
 export enum Theme {
@@ -38,6 +49,17 @@ export enum Theme {
 
 export interface User {
   id: string;
+  name: string;
   email: string;
+  avatarUrl?: string;
   isAuthenticated: boolean;
+  role: 'user' | 'admin' | 'dev';
+  paymentVerified: boolean;
+}
+
+export interface FeatureFlags {
+  googleAuth: boolean;
+  mfa: boolean;
+  stripePayment: boolean;
+  verifiedPaymentRequired: boolean;
 }

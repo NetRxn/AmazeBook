@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useProject } from '../contexts/ProjectContext';
 import { Theme, Character } from '../types';
-import { Camera, Check, AlertCircle, Loader2, Plus, Trash2, User } from 'lucide-react';
+import { Camera, Check, AlertCircle, Loader2, Plus, Trash2, User, Heart } from 'lucide-react';
 
 const steps = ['Characters', 'Photos', 'Theme & Style', 'Review'];
 
@@ -17,6 +17,16 @@ const CreateProject = () => {
     error 
   } = useProject();
   const [currentStep, setCurrentStep] = useState(0);
+
+  // Pre-populate dedication when entering Review step if empty
+  useEffect(() => {
+    if (currentStep === 3 && !project.dedication) {
+      const names = project.characters.map(c => c.name).filter(Boolean).join(' and ');
+      if (names) {
+        updateProject({ dedication: `For ${names}, the bravest adventurer${project.characters.length > 1 ? 's' : ''} I know.` });
+      }
+    }
+  }, [currentStep, project.characters, project.dedication]);
 
   const handleNext = () => {
     if (currentStep < steps.length - 1) setCurrentStep(c => c + 1);
@@ -42,7 +52,7 @@ const CreateProject = () => {
 
     if (project.status === 'PLANNING_STORY') {
       statusText = "Architecting the Plot...";
-      subText = "Our AI Editor is outlining a 12-page narrative arc.";
+      subText = "Our AI Editor is creating the title and narrative arc.";
       progress = 30;
     } else if (project.status === 'GENERATING_STORY') {
       statusText = "Writing the Book...";
@@ -50,7 +60,7 @@ const CreateProject = () => {
       progress = 60;
     } else if (project.status === 'GENERATING_IMAGES') {
       statusText = "Painting Illustrations...";
-      subText = "Generating publication-quality artwork for each page.";
+      subText = "Generating publication-quality artwork for cover and pages.";
       progress = 90;
     }
 
@@ -338,8 +348,20 @@ const CreateProject = () => {
                   </div>
                 </div>
 
+                <div className="pt-4 border-t border-slate-200">
+                  <label className="block text-sm font-bold uppercase text-brand-600 mb-2 flex items-center">
+                    <Heart size={14} className="mr-1 fill-brand-600" /> Dedication
+                  </label>
+                  <textarea
+                    value={project.dedication || ''}
+                    onChange={(e) => updateProject({ dedication: e.target.value })}
+                    className="w-full px-3 py-2 rounded-lg border border-brand-200 focus:ring-2 focus:ring-brand-500 outline-none bg-brand-50 text-slate-900 h-20 resize-none text-sm font-serif italic"
+                    placeholder="For [Name], with love..."
+                  />
+                </div>
+
                 {project.customPrompt && (
-                  <div className="pt-4 border-t border-slate-200">
+                  <div className="pt-4 border-t border-slate-200 mt-4">
                      <span className="text-slate-500 block text-sm">Custom Request</span>
                      <p className="text-slate-900 text-sm italic mt-1">"{project.customPrompt}"</p>
                   </div>

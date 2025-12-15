@@ -1,4 +1,5 @@
 import { generateBackupImage } from "./geminiService";
+import { getConfigNumber, PROMPT_KEYS } from "./promptService";
 
 // In a real implementation, this would point to a backend proxy to BFL.ai
 // or a provider like Together.ai/Replicate that hosts Flux Pro.
@@ -22,6 +23,8 @@ export const generateFluxImage = async (
       throw new Error("Flux API Key missing, falling back to Gemini");
     }
 
+    const guidance = getConfigNumber(PROMPT_KEYS.FLUX_GUIDANCE);
+
     // This is the theoretical fetch structure based on BFL specs
     const response = await fetch(FLUX_API_ENDPOINT, {
       method: "POST",
@@ -34,7 +37,8 @@ export const generateFluxImage = async (
         input_image: referenceImage, // This enables the "Kontext" consistency
         aspect_ratio: aspectRatio,
         output_format: "jpeg",
-        safety_tolerance: 2
+        safety_tolerance: 2,
+        guidance_scale: guidance // Use the tunable parameter
       })
     });
 
